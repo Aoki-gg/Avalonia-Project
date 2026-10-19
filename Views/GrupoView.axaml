@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="using:NovoProjetoAvalonia.ViewModels"
+             xmlns:vm="using:NovoProjetoAvalonia.ViewModels" 
+             x:DataType="vm:GrupoViewModel"
+
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="NovoProjetoAvalonia.Views.GrupoView">
+
+
+
+    <Grid Grid.Column="5" RowDefinitions="Auto, *, Auto" ColumnDefinitions="*, 200">
+        <!-- Título -->
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Página de Grupos" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10"/>
+        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding StatusMensagem}" Watermark="Nome do Grupo" HorizontalAlignment="Center" Width="400" Margin="0,50,0,10"/>
+        <!-- Lista de Contas (Original) -->
+<ScrollViewer Grid.Row="1" Grid.Column="0" 
+              VerticalScrollBarVisibility="Auto" 
+              HorizontalScrollBarVisibility="Disabled"
+              DragDrop.AllowDrop="True"
+              DragDrop.DragOver="ScrollViewer_DragOver"
+              DragDrop.Drop="ScrollViewer_Drop">
+    <ItemsControl ItemsSource="{Binding ContasLogadas}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal" ItemSpacing="20" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <Border Background="#2D2D2D" 
+                        BorderBrush="#444" 
+                        BorderThickness="1" 
+                        CornerRadius="8" 
+                        Padding="10" 
+                        Margin="6"
+                        PointerPressed="Border_PointerPressed">
+                    <StackPanel Spacing="8" Width="150">
+                        <TextBlock Text="Nova Conta" FontWeight="Bold" Foreground="White"/>
+                        <TextBox Watermark="Personagem" Text="{Binding NomePersonagem}" IsReadOnly="True"/>
+                    </StackPanel>
+                </Border>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</ScrollViewer>
+
+        <!-- CAIXA / DROP ZONE PARA SOLTAR OS ITENS -->
+<Border Grid.Row="1" Grid.Column="1" 
+        Background="#1E1E1E" 
+        BorderBrush="#666" 
+        BorderThickness="2" 
+        CornerRadius="12" 
+        Margin="10" 
+        Padding="15"
+        DragDrop.AllowDrop="True"
+        DragDrop.DragOver="DropZone_DragOver"
+        DragDrop.Drop="DropZone_Drop">
+
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ItemsControl ItemsSource="{Binding ContasNoGrupo}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="#333" BorderBrush="#555" BorderThickness="1" CornerRadius="6" Padding="8" Margin="4" PointerPressed="Border_PointerPressed">
+                        <TextBlock Text="{Binding NomePersonagem}" Foreground="White" FontWeight="Bold"/>
+                    
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
+</Border>
+
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0" Spacing="10">
+        <Button Grid.Row="2" Grid.ColumnSpan="2" Content="Montar Grupo" Command="{Binding CriarGrupoCommand}"></Button>
+        <Button HorizontalAlignment="Right" Grid.Row="2" Grid.ColumnSpan="2" Content="Remontar Grupo" Command="{Binding RemontarGrupoCommand}"></Button>
+        <Button HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Content="Desfazer Grupo" Command="{Binding DesfazerGrupoCommand}"></Button>
+        <Button HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Content="Seguir" Command="{Binding SeguirLiderCommand}"></Button>
+        <Button HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Content="Target" Command="{Binding PegarTargetLiderCommand}"></Button>
+        <Button HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Content="Mover" Command="{Binding MoverGrupoCommand}"></Button>
+        <Button HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Content="Teleportar" Command="{Binding TeleportarGrupoCommand}"></Button>
+
+        </StackPanel>
+         
+</Grid>
+
+
+</UserControl>

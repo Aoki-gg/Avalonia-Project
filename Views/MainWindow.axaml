@@ -1,0 +1,51 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:NovoProjetoAvalonia.ViewModels"
+        mc:Ignorable="d" 
+        x:Class="NovoProjetoAvalonia.Views.MainWindow"
+        x:DataType="vm:MainViewModel" 
+        Icon="/Assets/avalonia-logo.ico"
+        Title="AutoManager"
+        MinHeight="800" MinWidth="800">
+
+    <Design.DataContext>
+        <vm:MainViewModel/>
+    </Design.DataContext>
+
+    	<Grid ColumnDefinitions="200, *">
+        <!-- Menu Lateral -->
+        <Border BorderBrush="White" BorderThickness="2" >
+        <StackPanel Grid.Column="0" Background="#2D2D2D" Spacing="100" >
+            <TextBlock Text="Menu" Foreground="White" FontSize="16" Margin="0,0,0,10 "/>
+            
+            <Button Content="Início" 
+                    Command="{Binding IrParaInicioCommand}" 
+                    HorizontalAlignment="Center" FontSize="25" Foreground=""/>
+                    
+            <!-- Corrigido para incluir a convenção do sufixo Command -->
+            <Button Content="Repositorio" 
+                    Command="{Binding IrParaRepositorioCommand}" 
+                    HorizontalAlignment="Center" FontSize="25"/>
+
+            <Button Content="Contas" 
+                    Command="{Binding IrParaContasCommand}" 
+                    HorizontalAlignment="Center" FontSize="25"/>
+
+            <Button Content="Grupo" 
+                    Command="{Binding IrParaGruposCommand}" 
+                    HorizontalAlignment="Center" FontSize="25"/>
+
+            <Button Content="Macros" 
+                    Command="{Binding IrParaMacrosCommand}" 
+                    HorizontalAlignment="Center" FontSize="25"/>
+        </StackPanel></Border>
+
+        <!-- Área Dinâmica da Página -->
+        <ContentControl Grid.Column="1" 
+                        Content="{Binding PaginaAtual}" 
+                        Margin="10"/>
+
+    </Grid>
+</Window>

@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:NovoProjetoAvalonia.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:NovoProjetoAvalonia.ViewModels"
+             x:DataType="vm:MacrosViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="NovoProjetoAvalonia.Views.MacrosView">
+
+
+<Grid RowSpacing="20" ColumnSpacing="20">
+    <TextBox x:Name="txtClasse" Width="200" Height="100" HorizontalAlignment="Right"></TextBox>
+    <Button Content="listar" Command="{Binding ListarCommand}"></Button>
+    <Button Content="adicionar" Command="{Binding AdicionarComboAreaCommand}" CommandParameter="{Binding #txtClasse.Text}" HorizontalAlignment="Center"></Button>
+    <TextBlock Text="{Binding Lista}" 
+            Foreground="Yellow" 
+            FontSize="16" 
+            FontWeight="Bold" />
+
+
+    <Border Background="#222" 
+        BorderBrush="White" 
+        BorderThickness="2"
+        Width="200" Height="150"
+        DragDrop.AllowDrop="True"
+        >
+    <TextBlock Text="Arraste o ícone aqui" 
+               VerticalAlignment="Center" 
+               HorizontalAlignment="Center" 
+               Foreground="White"/>
+</Border>
+</Grid>
+
+
+</UserControl>
