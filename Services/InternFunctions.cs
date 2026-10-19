@@ -62,6 +62,7 @@ namespace NovoProjetoAvalonia.Services
 
             {
 
+
                 long ptr2 = MemoryManager.ReadInt64(HProcess, new IntPtr(partyAddress + 0x20));
                 long partyaddress = ptr2 + 0;
 
@@ -300,10 +301,10 @@ namespace NovoProjetoAvalonia.Services
                     return;
                 }
 
-                byte[] teleportbuffer = new byte[] { 0x6d, 0x00, 0x00, 0x01, itemslot[0], 0x00, 0x34, 0xc8, 0x00, 0x00, npcbyt[0], npcbyt[1] };
+                byte[] teleportbuffer = new byte[] { 0x6d, 0x00, 0x00, itemslot[0], 0x00, 0x01, 0x00, 0x00, 0x00, 0x12, 0xE8, 0x00,0x00, npcbyt[0], npcbyt[1] };
 
-                IntPtr memBuffer = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (UIntPtr)0xE, 0x1000 | 0x2000, 0x40);
-                MemoryManager.WriteProcessMemory(HProcess, memBuffer, teleportbuffer, 0xE, out _);
+                IntPtr memBuffer = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (UIntPtr)0x11, 0x1000 | 0x2000, 0x40);
+                MemoryManager.WriteProcessMemory(HProcess, memBuffer, teleportbuffer, 0x11, out _);
 
                 byte[] memBufferAddress = BitConverter.GetBytes(memBuffer);
 
@@ -313,7 +314,7 @@ namespace NovoProjetoAvalonia.Services
                     0x48, 0x83, 0xEC, 0x28,
                     0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                     0x48, 0xBA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x49, 0xB8, 0xE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                    0x49, 0xB8, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                     0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                     0xFF, 0xD0,
                     0x48, 0x83, 0xC4, 0x28,
@@ -692,158 +693,158 @@ namespace NovoProjetoAvalonia.Services
 
 
 
-        public void TrocarSetCompleto(IntPtr hpProcess,ulong idColar, ulong idAnel1, ulong idAnel2, ulong idFlecha, ulong idOrn)
-        {
-            if (hpProcess == IntPtr.Zero || Client.FunctionSwap == IntPtr.Zero) return;
+        //public void TrocarSetCompleto(IntPtr hpProcess,ulong idColar, ulong idAnel1, ulong idAnel2, ulong idFlecha, ulong idOrn)
+        //{
+        //    if (hpProcess == IntPtr.Zero || Client.FunctionSwap == IntPtr.Zero) return;
 
-            byte[] shellcode = new byte[]
-            {
-                0x48, 0x83, 0xEC, 0x28,                                     
+        //    byte[] shellcode = new byte[]
+        //    {
+        //        0x48, 0x83, 0xEC, 0x28,                                     
                 
-                // --- ITEM 1: Ornamento (Slot 0x5) ---
-                0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x48, 0xBA, 0xB, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0xFF, 0xD0,                                                 
+        //        // --- ITEM 1: Ornamento (Slot 0x5) ---
+        //        0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0x48, 0xBA, 0xB, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0xFF, 0xD0,                                                 
                 
-                // --- ITEM 2: Elmo (Slot 0x1) ---
-                0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x48, 0xBA, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0xFF, 0xD0,                                                 
+        //        // --- ITEM 2: Elmo (Slot 0x1) ---
+        //        0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0x48, 0xBA, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0xFF, 0xD0,                                                 
                 
-                // --- ITEM 3: Capa (Slot 0x3) ---
-                0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x48, 0xBA, 0xA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0xFF, 0xD0,
+        //        // --- ITEM 3: Capa (Slot 0x3) ---
+        //        0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0x48, 0xBA, 0xA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0xFF, 0xD0,
 
-                0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x48, 0xBA, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0xFF, 0xD0,
+        //        0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0x48, 0xBA, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0xFF, 0xD0,
 
-                0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x48, 0xBA, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0xFF, 0xD0,
+        //        0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0x48, 0xBA, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        //        0xFF, 0xD0,
 
-                0x48, 0x83, 0xC4, 0x28,
-                0xC3
-            };
+        //        0x48, 0x83, 0xC4, 0x28,
+        //        0xC3
+        //    };
 
-            Buffer.BlockCopy(BitConverter.GetBytes(idColar), 0, shellcode, 6, 8);
-            Buffer.BlockCopy(BitConverter.GetBytes((ulong)Client.FunctionSwap), 0, shellcode, 26, 8);
+        //    Buffer.BlockCopy(BitConverter.GetBytes(idColar), 0, shellcode, 6, 8);
+        //    Buffer.BlockCopy(BitConverter.GetBytes((ulong)Client.FunctionSwap), 0, shellcode, 26, 8);
 
-            Buffer.BlockCopy(BitConverter.GetBytes(idAnel1), 0, shellcode, 38, 8);
-            Buffer.BlockCopy(BitConverter.GetBytes((ulong)Client.FunctionSwap), 0, shellcode, 58, 8);
+        //    Buffer.BlockCopy(BitConverter.GetBytes(idAnel1), 0, shellcode, 38, 8);
+        //    Buffer.BlockCopy(BitConverter.GetBytes((ulong)Client.FunctionSwap), 0, shellcode, 58, 8);
 
-            Buffer.BlockCopy(BitConverter.GetBytes(idAnel2), 0, shellcode, 70, 8);
-            Buffer.BlockCopy(BitConverter.GetBytes((ulong)Client.FunctionSwap), 0, shellcode, 90, 8);
+        //    Buffer.BlockCopy(BitConverter.GetBytes(idAnel2), 0, shellcode, 70, 8);
+        //    Buffer.BlockCopy(BitConverter.GetBytes((ulong)Client.FunctionSwap), 0, shellcode, 90, 8);
 
-            Buffer.BlockCopy(BitConverter.GetBytes(idFlecha), 0, shellcode, 102, 8);
-            Buffer.BlockCopy(BitConverter.GetBytes((ulong)Client.FunctionSwap), 0, shellcode, 122, 8);
+        //    Buffer.BlockCopy(BitConverter.GetBytes(idFlecha), 0, shellcode, 102, 8);
+        //    Buffer.BlockCopy(BitConverter.GetBytes((ulong)Client.FunctionSwap), 0, shellcode, 122, 8);
 
-            Buffer.BlockCopy(BitConverter.GetBytes(idOrn), 0, shellcode, 134, 8);
-            Buffer.BlockCopy(BitConverter.GetBytes((ulong)Client.FunctionSwap), 0, shellcode, 154, 8);
+        //    Buffer.BlockCopy(BitConverter.GetBytes(idOrn), 0, shellcode, 134, 8);
+        //    Buffer.BlockCopy(BitConverter.GetBytes((ulong)Client.FunctionSwap), 0, shellcode, 154, 8);
 
-            IntPtr allocMem = MemoryManager.VirtualAllocEx(hpProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-            if (allocMem != IntPtr.Zero)
-            {
-                MemoryManager.WriteProcessMemory(hpProcess, allocMem, shellcode, (uint)shellcode.Length, out _);
-                IntPtr hThread = MemoryManager.CreateRemoteThread(hpProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
+        //    IntPtr allocMem = MemoryManager.VirtualAllocEx(hpProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
+        //    if (allocMem != IntPtr.Zero)
+        //    {
+        //        MemoryManager.WriteProcessMemory(hpProcess, allocMem, shellcode, (uint)shellcode.Length, out _);
+        //        IntPtr hThread = MemoryManager.CreateRemoteThread(hpProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
 
-                if (hThread != IntPtr.Zero)
-                {
-                    MemoryManager.WaitForSingleObject(hThread, 1000);
-                    MemoryManager.CloseHandle(hThread);
-                }
+        //        if (hThread != IntPtr.Zero)
+        //        {
+        //            MemoryManager.WaitForSingleObject(hThread, 1000);
+        //            MemoryManager.CloseHandle(hThread);
+        //        }
 
-                MemoryManager.VirtualFreeEx(hpProcess, allocMem, 0, 0x8000);
-            }
-        }
-
-
-        public void ProcessarTrocaDeSet(IntPtr hpProcess,ulong idColarAtk, ulong idAnel1Atk, ulong idAnel2Atk, ulong idFlechaAtk, ulong idOrnAtk, ulong idColarDef, ulong idAnel1Def, ulong idAnel2Def, ulong idFlechaDef, ulong idOrnDef)
-        {
-            if (hpProcess == IntPtr.Zero) return;
+        //        MemoryManager.VirtualFreeEx(hpProcess, allocMem, 0, 0x8000);
+        //    }
+        //}
 
 
-            //int armaAtual2 = MemoryManager.ReadInt32(hpProcess, PersonagemInventario + 0xA84);
-            //MessageBox.Show($"Arma Atual: {armaAtual2}\nArmaDef: {ArmaDef}\nArmaAtk: {ArmaAtk}", "Debug");
-
-            //if (armaAtual2 == ArmaDef)
-            //{
-            //    TrocarSetCompleto(idColarAtk, idAnel1Atk, idAnel2Atk, idFlechaAtk, idOrnAtk);
-            //}
-
-            //if (armaAtual2 == ArmaAtk)
-            //{
-            //    TrocarSetCompleto(idColarDef, idAnel1Def, idAnel2Def, idFlechaDef, idOrnDef);
-            //}
-        }
+        //public void ProcessarTrocaDeSet(IntPtr hpProcess,ulong idColarAtk, ulong idAnel1Atk, ulong idAnel2Atk, ulong idFlechaAtk, ulong idOrnAtk, ulong idColarDef, ulong idAnel1Def, ulong idAnel2Def, ulong idFlechaDef, ulong idOrnDef)
+        //{
+        //    if (hpProcess == IntPtr.Zero) return;
 
 
-        public static void castarSkill(ulong skillId, IntPtr hpProcess)
-        {
-            // Converte o endereço da função para 8 bytes (Little-Endian)
-            byte[] addressBytes = BitConverter.GetBytes(Client.SkillCall);
-            byte[] addressBytes2 = BitConverter.GetBytes(skillId);
+        //    //int armaAtual2 = MemoryManager.ReadInt32(hpProcess, PersonagemInventario + 0xA84);
+        //    //MessageBox.Show($"Arma Atual: {armaAtual2}\nArmaDef: {ArmaDef}\nArmaAtk: {ArmaAtk}", "Debug");
 
-            byte[] shellcode = new byte[]
-            {
-                // 1. sub rsp, 0x28 (Shadow Space + Alinhamento) [4 bytes]
-                0x48, 0x83, 0xEC, 0x28,
+        //    //if (armaAtual2 == ArmaDef)
+        //    //{
+        //    //    TrocarSetCompleto(idColarAtk, idAnel1Atk, idAnel2Atk, idFlechaAtk, idOrnAtk);
+        //    //}
 
-                // 2. mov rcx, 0x6a0 (1º Argumento) [10 bytes]
-                0x48, 0xB9, 0xB0, 0x14, 0x98, 0x9B, 0x00, 0x00, 0x00, 0x00,
-
-                // 3. mov rdx, 0xb (2º Argumento) [10 bytes]
-                0x48, 0xBA, 0x85, 0x0F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-
-                // 4. mov r8, 1 (3º Argumento - 64 bits completo) [10 bytes]
-                0x49, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-
-                // 5. mov r9, 0x15D9C8 (4º Argumento - 64 bits completo) [10 bytes]
-                0x49, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-
-                // 6. mov rax, targetAddress (Endereço da função SkillCall) 
-                // Inicia exatamente no índice 44 (0x2C) [2 bytes do opcode + 8 bytes de placeholder]
-                0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-
-                // 7. call rax [2 bytes]
-                0xFF, 0xD0,
-
-                // 8. add rsp, 0x28 (Restaura a pilha) [4 bytes]
-                0x48, 0x83, 0xC4, 0x28,
-
-                // 9. ret [1 byte]
-                0xC3
-            };
-
-            // Soma dos tamanhos acima até o 'mov rax': 4 + 10 + 10 + 10 + 10 = 44 bytes.
-            // O opcode '0x48, 0xB8' ocupa os 2 primeiros bytes da instrução 6, logo os dados começam no índice 46.
-            // Vamos copiar o endereço exatamente a partir do índice 46 (0x2E).
-            Buffer.BlockCopy(addressBytes2, 0, shellcode, 16, 8);
-            Buffer.BlockCopy(addressBytes, 0, shellcode, 46, 8);
+        //    //if (armaAtual2 == ArmaAtk)
+        //    //{
+        //    //    TrocarSetCompleto(idColarDef, idAnel1Def, idAnel2Def, idFlechaDef, idOrnDef);
+        //    //}
+        //}
 
 
-            IntPtr allocMem = MemoryManager.VirtualAllocEx(hpProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-            if (allocMem != IntPtr.Zero)
-            {
-                if (MemoryManager.WriteProcessMemory(hpProcess, allocMem, shellcode, (uint)shellcode.Length, out _))
-                {
-                    IntPtr hThread = MemoryManager.CreateRemoteThread(hpProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
+        //public static void castarSkill(ulong skillId, IntPtr hpProcess)
+        //{
+        //    // Converte o endereço da função para 8 bytes (Little-Endian)
+        //    byte[] addressBytes = BitConverter.GetBytes(Client.SkillCall);
+        //    byte[] addressBytes2 = BitConverter.GetBytes(skillId);
 
-                    if (hThread != IntPtr.Zero)
-                    {
-                        MemoryManager.WaitForSingleObject(hThread, 1000);
-                        MemoryManager.CloseHandle(hThread);
-                    }
-                }
-                MemoryManager.VirtualFreeEx(hpProcess, allocMem, 0, 0x8000);
-            }
-        }
+        //    byte[] shellcode = new byte[]
+        //    {
+        //        // 1. sub rsp, 0x28 (Shadow Space + Alinhamento) [4 bytes]
+        //        0x48, 0x83, 0xEC, 0x28,
+
+        //        // 2. mov rcx, 0x6a0 (1º Argumento) [10 bytes]
+        //        0x48, 0xB9, 0xB0, 0x14, 0x98, 0x9B, 0x00, 0x00, 0x00, 0x00,
+
+        //        // 3. mov rdx, 0xb (2º Argumento) [10 bytes]
+        //        0x48, 0xBA, 0x85, 0x0F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+
+        //        // 4. mov r8, 1 (3º Argumento - 64 bits completo) [10 bytes]
+        //        0x49, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+
+        //        // 5. mov r9, 0x15D9C8 (4º Argumento - 64 bits completo) [10 bytes]
+        //        0x49, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+
+        //        // 6. mov rax, targetAddress (Endereço da função SkillCall) 
+        //        // Inicia exatamente no índice 44 (0x2C) [2 bytes do opcode + 8 bytes de placeholder]
+        //        0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+
+        //        // 7. call rax [2 bytes]
+        //        0xFF, 0xD0,
+
+        //        // 8. add rsp, 0x28 (Restaura a pilha) [4 bytes]
+        //        0x48, 0x83, 0xC4, 0x28,
+
+        //        // 9. ret [1 byte]
+        //        0xC3
+        //    };
+
+        //    // Soma dos tamanhos acima até o 'mov rax': 4 + 10 + 10 + 10 + 10 = 44 bytes.
+        //    // O opcode '0x48, 0xB8' ocupa os 2 primeiros bytes da instrução 6, logo os dados começam no índice 46.
+        //    // Vamos copiar o endereço exatamente a partir do índice 46 (0x2E).
+        //    Buffer.BlockCopy(addressBytes2, 0, shellcode, 16, 8);
+        //    Buffer.BlockCopy(addressBytes, 0, shellcode, 46, 8);
+
+
+        //    IntPtr allocMem = MemoryManager.VirtualAllocEx(hpProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
+        //    if (allocMem != IntPtr.Zero)
+        //    {
+        //        if (MemoryManager.WriteProcessMemory(hpProcess, allocMem, shellcode, (uint)shellcode.Length, out _))
+        //        {
+        //            IntPtr hThread = MemoryManager.CreateRemoteThread(hpProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
+
+        //            if (hThread != IntPtr.Zero)
+        //            {
+        //                MemoryManager.WaitForSingleObject(hThread, 1000);
+        //                MemoryManager.CloseHandle(hThread);
+        //            }
+        //        }
+        //        MemoryManager.VirtualFreeEx(hpProcess, allocMem, 0, 0x8000);
+        //    }
+        //}
 
         public static void CancelarSkill(IntPtr BaseAddres,IntPtr hpProcess)
         {

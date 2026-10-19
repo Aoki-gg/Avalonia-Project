@@ -2,7 +2,10 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using Avalonia.Win32.Input;
 using NovoProjetoAvalonia.ViewModels;
+using System;
+using System.Runtime.InteropServices;
 
 namespace NovoProjetoAvalonia.Views;
 
@@ -11,10 +14,14 @@ public partial class GrupoView : UserControl
     private static readonly DataFormat<ContaViewModel> ContaFormat =
         DataFormat.CreateInProcessFormat<ContaViewModel>("conta-item");
 
+
     public GrupoView()
     {
         InitializeComponent();
+
     }
+
+ 
 
     private async void Border_PointerPressed(object? sender, PointerPressedEventArgs e)
     {

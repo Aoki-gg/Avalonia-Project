@@ -66,6 +66,7 @@ namespace NovoProjetoAvalonia.ViewModels
         public async Task CriarGrupo()
         {
 
+            byte[] idlider = personagens[0].getIdBytes();
             if (personagens.Count != 0)
             {
                 personagens.Clear();
@@ -84,17 +85,17 @@ namespace NovoProjetoAvalonia.ViewModels
 
             foreach (Personagem personagem in personagens)
             {
-                await Task.Delay(200);
+                
                 grupo.mandarGrupo(lider, personagem.getIdBytes());
 
             }
 
-            await Task.Delay(500);
+            await Task.Delay(1000);
 
             foreach (Personagem personagem in personagens)
             {
                 await Task.Delay(200);
-                grupo.aceitarGrupo(personagem, personagens[0].getIdBytes());
+                grupo.aceitarGrupo(personagem, idlider);
 
             }
         }

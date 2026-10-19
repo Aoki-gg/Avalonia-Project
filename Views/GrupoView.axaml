@@ -79,11 +79,10 @@
         <Button Grid.Row="2" Grid.ColumnSpan="2" Content="Montar Grupo" Command="{Binding CriarGrupoCommand}"></Button>
         <Button HorizontalAlignment="Right" Grid.Row="2" Grid.ColumnSpan="2" Content="Remontar Grupo" Command="{Binding RemontarGrupoCommand}"></Button>
         <Button HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Content="Desfazer Grupo" Command="{Binding DesfazerGrupoCommand}"></Button>
-        <Button HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Content="Seguir" Command="{Binding SeguirLiderCommand}"></Button>
+        <Button HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Content="Seguir" Command="{Binding SeguirLiderCommand}" ></Button>
         <Button HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Content="Target" Command="{Binding PegarTargetLiderCommand}"></Button>
         <Button HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Content="Mover" Command="{Binding MoverGrupoCommand}"></Button>
         <Button HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Content="Teleportar" Command="{Binding TeleportarGrupoCommand}"></Button>
-
         </StackPanel>
          
 </Grid>

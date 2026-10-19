@@ -15,10 +15,11 @@ namespace NovoProjetoAvalonia.Models
         private long id;
         private String nomePersonagem;
         private bool logged = false;
-
-        public Personagem(String nomePersonagem )
+        int tamanhoNome;
+        public Personagem(String nomePersonagem, int tamanhoNome)
         {
             this.nomePersonagem = nomePersonagem;
+            this.tamanhoNome = tamanhoNome;
         }
 
         public long getId()
@@ -144,7 +145,7 @@ namespace NovoProjetoAvalonia.Models
 
         public async Task<bool> AnexarProcessoAsync(Action<string> onNomeLido = null)
         {
-            // Roda em segundo plano para não congelar a interface (View/Avalonia)
+            
             return await Task.Run(async () =>
             {
                 while (true)
@@ -166,15 +167,21 @@ namespace NovoProjetoAvalonia.Models
                             if (hProcess == IntPtr.Zero)
                                 continue;
 
-                            IntPtr hostPlayer = (IntPtr)MemoryManager.ReadInt64(hProcess, (IntPtr)MemoryManager.ReadInt64(hProcess, baseAddress + 0x01be7c18) + 0x8);
+
+                            long hostPtr = MemoryManager.ReadInt64(hProcess, baseAddress + 0x1c43070);
+                            long hostPlayer = MemoryManager.ReadInt64(hProcess, (IntPtr)(hostPtr + 0x78));
 
 
-                            IntPtr ptr1 = (IntPtr)MemoryManager.ReadInt64(hProcess, baseAddress + 0x01bece00);
+                           
+                            
+
+                            IntPtr ptr1 = (IntPtr)MemoryManager.ReadInt64(hProcess, baseAddress + 0x1bece00);
                             IntPtr enderecoNome = ptr1 + 0x0;
-                            string nome = MemoryManager.ReadUnicodeString(hProcess, enderecoNome, 48);
+                            string nome = MemoryManager.ReadUnicodeString(hProcess, enderecoNome, this.tamanhoNome);
 
                             onNomeLido?.Invoke(nome);
-
+                            
+                            
                             // 2. Compara se é o personagem esperado nesta janela
                             if (!string.IsNullOrEmpty(nome) && nome.Equals(this.nomePersonagem))
                             {
@@ -182,13 +189,13 @@ namespace NovoProjetoAvalonia.Models
                                 this.processoAnexado = processo;
                                 this.BaseAddress = baseAddress;
                                 this.HProcess = hProcess;
-                                this.HostPlayer = (IntPtr)((IntPtr)hostPlayer + 0);
-                                //this.id = MemoryManager.ReadInt64(hProcess, new IntPtr(hostPlayer + 0x948));
+                                this.HostPlayer = (IntPtr)hostPlayer + 0;
+                                this.id = MemoryManager.ReadInt64(hProcess, this.HostPlayer + 0x10E8);
                                 this.nomePersonagem = nome;
-                                //long ptr1 = MemoryManager.ReadInt64(hProcess, new IntPtr(baseAddress + 0x1713230));
-                                //this.party = ptr1;
+                                long ptrparty1 = MemoryManager.ReadInt64(hProcess, new IntPtr(baseAddress + 0x1bca658));
+                                this.party = ptrparty1;
 
-                                this.HostPlayerBytes = BitConverter.GetBytes(hostPlayer);
+                                this.HostPlayerBytes = BitConverter.GetBytes(HostPlayer);
                                 this.funcaoSeguir = BitConverter.GetBytes(baseAddress + 0xab6e60);
                                 this.funcaoAceitar = BitConverter.GetBytes(baseAddress + 0xcfe2f0);
                                 this.funcaoMandarGrupo = BitConverter.GetBytes(baseAddress + 0xcfe5c0);

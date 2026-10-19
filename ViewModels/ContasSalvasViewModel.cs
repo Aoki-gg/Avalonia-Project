@@ -25,7 +25,7 @@ namespace NovoProjetoAvalonia.ViewModels
         
 
         public static ObservableCollection<ContaViewModel> Contas { get; } = new();
-        public static Personagem [] personagens = new Personagem[3];
+        public static Personagem [] personagens = new Personagem[10];
 
         public static GrupoManagement grupo = new GrupoManagement();
 
@@ -92,8 +92,9 @@ namespace NovoProjetoAvalonia.ViewModels
             string senha = conta.Senha;
             string nome = conta.NomePersonagem;
             string classe = conta.Classe;
+            int tamanhoNome = conta.NomePersonagem.Length;
 
-            Personagem novoPersonagem = new Personagem(nome);
+            Personagem novoPersonagem = new Personagem(nome, tamanhoNome);
             personagens[indiceVazio] = novoPersonagem;
 
             StatusMensagem = $"Conta de {nome} salva, indice {indiceVazio} ";
@@ -127,8 +128,8 @@ namespace NovoProjetoAvalonia.ViewModels
         [RelayCommand]
         private async Task CancelarSkill()
         {
-            byte[] id = BitConverter.GetBytes((ulong)0xa0bb0);
-            grupo.seguir(personagens[0], id);
+            byte[] id = BitConverter.GetBytes(0x2354);
+            grupo.teleporte(personagens[0], 0x2354, 0x02);
 
         }
 
