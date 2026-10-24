@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NovoProjetoAvalonia.ViewModels;
+using NovoProjetoAvalonia.Services;
 
 namespace NovoProjetoAvalonia.ViewModels;
 
@@ -23,7 +24,6 @@ public partial class MainViewModel : ViewModelBase
         _contasViewModel = new ContasSalvasViewModel(_gruposViewModel);
         _gruposViewModel = new GrupoViewModel(_contasViewModel);
         _macrosViewModel = new MacrosViewModel();
-
 
         _paginaAtual = new InicioViewModel();
     }

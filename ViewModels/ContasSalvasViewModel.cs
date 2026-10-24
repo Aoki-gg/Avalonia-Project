@@ -3,13 +3,14 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NovoProjetoAvalonia.Models;
 using NovoProjetoAvalonia.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.ComponentModel;
-using System;
 
 namespace NovoProjetoAvalonia.ViewModels
 {
@@ -19,7 +20,17 @@ namespace NovoProjetoAvalonia.ViewModels
         public ContasSalvasViewModel(GrupoViewModel grupoViewModel)
         {
             _grupoViewModel = grupoViewModel;
-            
+            Contas.Add(new ContaViewModel("Lenamiu", "Arqueiro", 0));
+            Contas.Add(new ContaViewModel("farmzekoo1", "Guerreiro", 0));
+            Contas.Add(new ContaViewModel("farmzeko2", "Feiticeira", 0));
+            Contas.Add(new ContaViewModel("farmzeko3", "Arcano", 0));
+            Contas.Add(new ContaViewModel("farmzeko4", "Barbaro", 0));
+            Contas.Add(new ContaViewModel("farmzeko5", "Sacerdote", 0));
+            Contas.Add(new ContaViewModel("farmzeko6", "Tormentador", 0));
+            Contas.Add(new ContaViewModel("farmzeko7", "Mercenario", 0));
+            Contas.Add(new ContaViewModel("farmzeko8", "Macaco", 0));
+            Contas.Add(new ContaViewModel("farmzeko9", "Mistico", 0));
+
         }
 
         
@@ -38,7 +49,7 @@ namespace NovoProjetoAvalonia.ViewModels
         [RelayCommand]
         private void AdicionarConta() // 'A' maiúsculo
         {
-            Contas.Add(new ContaViewModel());
+            Contas.Add(new ContaViewModel("teste","teste",15));
 
         }
 
@@ -94,10 +105,10 @@ namespace NovoProjetoAvalonia.ViewModels
             string classe = conta.Classe;
             int tamanhoNome = conta.NomePersonagem.Length;
 
-            Personagem novoPersonagem = new Personagem(nome, tamanhoNome);
+            Personagem novoPersonagem = new Personagem(nome, tamanhoNome,classe);
             personagens[indiceVazio] = novoPersonagem;
 
-            StatusMensagem = $"Conta de {nome} salva, indice {indiceVazio} ";
+            StatusMensagem = $"Conta {nome} indice{indiceVazio} classe{classe} ";
         }
 
             
@@ -123,13 +134,61 @@ namespace NovoProjetoAvalonia.ViewModels
                     });
                 });
                 Contas[indice].Status = true;
+        }
+        public void DesanexarDoJogo()
+        {
+            try
+            {
+                for (int i = 0; i < personagens.Length ;i++)
+                {
+                    if (personagens[i] != null)
+                    {
+                        var p = personagens[i];
+                        if (p != null)
+                        {
+                            IntPtr hProcess = p.getHProcess();
+                            IntPtr sharedAllocMem = p.getMemorySpace();
+
+                            // 1. Libera a memória alocada (VirtualAllocEx) se ela existir
+                            if (hProcess != IntPtr.Zero && sharedAllocMem != IntPtr.Zero)
+                            {
+                                // 0x8000 (MEM_RELEASE) libera o bloco alocado de volta para o sistema operacional do jogo
+                                MemoryManager.VirtualFreeEx(hProcess, sharedAllocMem, 0, 0x8000);
+                            }
+
+                            // 2. Fecha o Handle aberto do processo do jogo
+                            if (hProcess != IntPtr.Zero)
+                            {
+                                MemoryManager.CloseHandle(hProcess);
+                            }
+
+                            // 3. Reseta os valores DIRETAMENTE no objeto do personagem 
+                            // (Usando métodos setters equivalentes aos seus getters):
+                            p.setHProcess(IntPtr.Zero);
+                            p.setMemorySpace(IntPtr.Zero);
+                            p.setProcess(null);
+                        }
+                    }
+
+                    else
+                    {
+                        break;
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                // Tratar log de erro se necessário
+                System.Diagnostics.Debug.WriteLine($"Erro ao desanexar: {ex.Message}");
+            }
+        }
+
 
         [RelayCommand]
         private async Task CancelarSkill()
         {
-            byte[] id = BitConverter.GetBytes(0x2354);
-            grupo.teleporte(personagens[0], 0x2354, 0x02);
+            
+            grupo.skillSender(personagens[0], 0x119c);
 
         }
 

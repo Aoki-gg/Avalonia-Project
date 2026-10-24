@@ -16,6 +16,11 @@ namespace NovoProjetoAvalonia.Models
         protected IntPtr isCasting { get; set; }
         protected long party { get; set; }
 
+        protected IntPtr sharedAllocMem = IntPtr.Zero;
+        protected const uint ALLOC_SIZE = 4096;
+
+        protected IntPtr buffer { get; set; }
+
         //Pre-carregamento de funcoes para ter melhor perfomance.
 
         protected byte[] packetSender { get; set; }

@@ -10,6 +10,14 @@ namespace NovoProjetoAvalonia.ViewModels
 {
     public partial class ContaViewModel: ObservableObject
     {
+
+        public ContaViewModel(String nome, String classe, int indice)
+        {
+            this.nomePersonagem = nome;
+            this.classe = classe;
+            this.indice = indice;
+        }
+
         [ObservableProperty]
         private string login = string.Empty;
 

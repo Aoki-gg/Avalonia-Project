@@ -18,7 +18,7 @@ namespace NovoProjetoAvalonia.Services
         private bool _verificacaoAtiva = false;
 
 
-        public static void seguir(IntPtr HProcess, byte[] hostPlayer, byte[] funcaoAddress, byte[] playerID)
+        public static void seguir(IntPtr HProcess, IntPtr sharedAllocMem, byte[] hostPlayer, byte[] funcaoAddress, byte[] playerID)
         {
 
             {
@@ -39,34 +39,30 @@ namespace NovoProjetoAvalonia.Services
                 Buffer.BlockCopy(playerID, 0, shellcode, 16, 8);
                 Buffer.BlockCopy(funcaoAddress, 0, shellcode, 26, 8);
 
-                IntPtr allocMem = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-                if (allocMem != IntPtr.Zero)
+                if (MemoryManager.WriteProcessMemory(HProcess, sharedAllocMem, shellcode, (uint)shellcode.Length, out _))
                 {
-                    if (MemoryManager.WriteProcessMemory(HProcess, allocMem, shellcode, (uint)shellcode.Length, out _))
+                    // Cria a thread apontando para o bloco fixo
+                    IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, sharedAllocMem, IntPtr.Zero, 0, IntPtr.Zero);
+                    if (hThread != IntPtr.Zero)
                     {
-                        IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
-                        if (hThread != IntPtr.Zero)
-                        {
-                            MemoryManager.WaitForSingleObject(hThread, 1000);
-                            MemoryManager.CloseHandle(hThread);
-                        }
+                        MemoryManager.WaitForSingleObject(hThread, 100);
+                        MemoryManager.CloseHandle(hThread);
                     }
-                    MemoryManager.VirtualFreeEx(HProcess, allocMem, 0, 0x8000);
                 }
             }
         }
 
 
-        public static void aceitar(IntPtr HProcess, long partyAddress, byte[] funcaoAddress, byte [] playerID)
+        public static void aceitar(IntPtr HProcess, IntPtr sharedAllocMem, long partyAddress, byte[] funcaoAddress, byte [] playerID)
         {
 
             {
 
+                long ptr1 = MemoryManager.ReadInt64(HProcess, new IntPtr(partyAddress + 0x20));
+                long ptr2 = ptr1 + 0x0;
 
-                long ptr2 = MemoryManager.ReadInt64(HProcess, new IntPtr(partyAddress + 0x20));
-                long partyaddress = ptr2 + 0;
 
-                byte[] partyBytes = BitConverter.GetBytes(partyaddress);
+                byte[] partyBytes = BitConverter.GetBytes(ptr2);
 
                 byte[] shellcode = new byte[]
                 {
@@ -85,26 +81,22 @@ namespace NovoProjetoAvalonia.Services
                 Buffer.BlockCopy(partyBytes, 0, shellcode, 16, 8);
                 Buffer.BlockCopy(funcaoAddress, 0, shellcode, 26, 8);
 
-              
-                IntPtr allocMem = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-                if (allocMem != IntPtr.Zero)
+
+                if (MemoryManager.WriteProcessMemory(HProcess, (sharedAllocMem + 100), shellcode, (uint)shellcode.Length, out _))
                 {
-                    if (MemoryManager.WriteProcessMemory(HProcess, allocMem, shellcode, (uint)shellcode.Length, out _))
+                    // Cria a thread apontando para o bloco fixo
+                    IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, (sharedAllocMem + 100), IntPtr.Zero, 0, IntPtr.Zero);
+                    if (hThread != IntPtr.Zero)
                     {
-                        IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
-                        if (hThread != IntPtr.Zero)
-                        {
-                            MemoryManager.WaitForSingleObject(hThread, 1000);
-                            MemoryManager.CloseHandle(hThread);
-                        }
+                        MemoryManager.WaitForSingleObject(hThread, 100);
+                        MemoryManager.CloseHandle(hThread);
                     }
-                    MemoryManager.VirtualFreeEx(HProcess, allocMem, 0, 0x8000);
                 }
             }
         }
 
 
-        public static void mandarGrupo(IntPtr HProcess, byte[]funcao, byte[] playerID)
+        public static void mandarGrupo(IntPtr HProcess, IntPtr sharedAllocMem, byte[]funcao, byte[] playerID)
         {
 
             {
@@ -124,24 +116,20 @@ namespace NovoProjetoAvalonia.Services
                 Buffer.BlockCopy(funcao, 0, shellcode, 16, 8);
 
 
-                IntPtr allocMem = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-                if (allocMem != IntPtr.Zero)
+                if (MemoryManager.WriteProcessMemory(HProcess, (sharedAllocMem + 200), shellcode, (uint)shellcode.Length, out _))
                 {
-                    if (MemoryManager.WriteProcessMemory(HProcess, allocMem, shellcode, (uint)shellcode.Length, out _))
+                    // Cria a thread apontando para o bloco fixo
+                    IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, (sharedAllocMem + 200), IntPtr.Zero, 0, IntPtr.Zero);
+                    if (hThread != IntPtr.Zero)
                     {
-                        IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
-                        if (hThread != IntPtr.Zero)
-                        {
-                            MemoryManager.WaitForSingleObject(hThread, 1000);
-                            MemoryManager.CloseHandle(hThread);
-                        }
+                        MemoryManager.WaitForSingleObject(hThread, 100);
+                        MemoryManager.CloseHandle(hThread);
                     }
-                    MemoryManager.VirtualFreeEx(HProcess, allocMem, 0, 0x8000);
                 }
             }
         }
 
-        public static void kickarGrupo(IntPtr HProcess, byte[] funcao ,byte[] playerID)
+        public static void kickarGrupo(IntPtr HProcess, IntPtr sharedAllocMem, byte[] funcao ,byte[] playerID)
         {
 
             {
@@ -161,24 +149,20 @@ namespace NovoProjetoAvalonia.Services
                 Buffer.BlockCopy(playerID, 0, shellcode, 6, 8);
                 Buffer.BlockCopy(funcao, 0, shellcode, 16, 8);
 
-                IntPtr allocMem = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-                if (allocMem != IntPtr.Zero)
+                if (MemoryManager.WriteProcessMemory(HProcess, (sharedAllocMem + 300), shellcode, (uint)shellcode.Length, out _))
                 {
-                    if (MemoryManager.WriteProcessMemory(HProcess, allocMem, shellcode, (uint)shellcode.Length, out _))
+                    // Cria a thread apontando para o bloco fixo
+                    IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, (sharedAllocMem + 300), IntPtr.Zero, 0, IntPtr.Zero);
+                    if (hThread != IntPtr.Zero)
                     {
-                        IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
-                        if (hThread != IntPtr.Zero)
-                        {
-                            MemoryManager.WaitForSingleObject(hThread, 1000);
-                            MemoryManager.CloseHandle(hThread);
-                        }
+                        MemoryManager.WaitForSingleObject(hThread, 100);
+                        MemoryManager.CloseHandle(hThread);
                     }
-                    MemoryManager.VirtualFreeEx(HProcess, allocMem, 0, 0x8000);
                 }
             }
         }
 
-        public static void passarLider(IntPtr HProcess,byte[] funcao, byte[] playerID)
+        public static void passarLider(IntPtr HProcess, IntPtr sharedAllocMem, byte[] funcao, byte[] playerID)
         {
 
             {
@@ -198,25 +182,21 @@ namespace NovoProjetoAvalonia.Services
                 Buffer.BlockCopy(playerID, 0, shellcode, 6, 8);
                 Buffer.BlockCopy(funcao, 0, shellcode, 16, 8);
 
-                IntPtr allocMem = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-                if (allocMem != IntPtr.Zero)
+                if (MemoryManager.WriteProcessMemory(HProcess, (sharedAllocMem + 400), shellcode, (uint)shellcode.Length, out _))
                 {
-                    if (MemoryManager.WriteProcessMemory(HProcess, allocMem, shellcode, (uint)shellcode.Length, out _))
+                    // Cria a thread apontando para o bloco fixo
+                    IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, (sharedAllocMem + 400), IntPtr.Zero, 0, IntPtr.Zero);
+                    if (hThread != IntPtr.Zero)
                     {
-                        IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
-                        if (hThread != IntPtr.Zero)
-                        {
-                            MemoryManager.WaitForSingleObject(hThread, 1000);
-                            MemoryManager.CloseHandle(hThread);
-                        }
+                        MemoryManager.WaitForSingleObject(hThread, 100);
+                        MemoryManager.CloseHandle(hThread);
                     }
-                    MemoryManager.VirtualFreeEx(HProcess, allocMem, 0, 0x8000);
                 }
             }
         }
 
 
-        public static void sairGrupo(IntPtr HProcess, byte[] funcao)
+        public static void sairGrupo(IntPtr HProcess, IntPtr sharedAllocMem, byte[] funcao)
         {
 
             {
@@ -233,24 +213,20 @@ namespace NovoProjetoAvalonia.Services
 
                 Buffer.BlockCopy(funcao, 0, shellcode, 6, 8);
 
-                IntPtr allocMem = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-                if (allocMem != IntPtr.Zero)
+                if (MemoryManager.WriteProcessMemory(HProcess, (sharedAllocMem + 500), shellcode, (uint)shellcode.Length, out _))
                 {
-                    if (MemoryManager.WriteProcessMemory(HProcess, allocMem, shellcode, (uint)shellcode.Length, out _))
+                    // Cria a thread apontando para o bloco fixo
+                    IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, (sharedAllocMem + 500), IntPtr.Zero, 0, IntPtr.Zero);
+                    if (hThread != IntPtr.Zero)
                     {
-                        IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
-                        if (hThread != IntPtr.Zero)
-                        {
-                            MemoryManager.WaitForSingleObject(hThread, 1000);
-                            MemoryManager.CloseHandle(hThread);
-                        }
+                        MemoryManager.WaitForSingleObject(hThread, 100);
+                        MemoryManager.CloseHandle(hThread);
                     }
-                    MemoryManager.VirtualFreeEx(HProcess, allocMem, 0, 0x8000);
                 }
             }
         }
 
-        public static void pegarTarget(IntPtr HProcess,byte[] funcao ,byte[] playerID)
+        public static void pegarTarget(IntPtr HProcess, IntPtr sharedAllocMem, byte[] funcao ,byte[] playerID)
         {
 
             {
@@ -269,26 +245,22 @@ namespace NovoProjetoAvalonia.Services
                 Buffer.BlockCopy(playerID, 0, shellcode, 6, 8);
                 Buffer.BlockCopy(funcao, 0, shellcode, 16, 8);
 
-                
-                IntPtr allocMem = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-                if (allocMem != IntPtr.Zero)
+
+                if (MemoryManager.WriteProcessMemory(HProcess, (sharedAllocMem + 600), shellcode, (uint)shellcode.Length, out _))
                 {
-                    if (MemoryManager.WriteProcessMemory(HProcess, allocMem, shellcode, (uint)shellcode.Length, out _))
+                    // Cria a thread apontando para o bloco fixo
+                    IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, (sharedAllocMem + 600), IntPtr.Zero, 0, IntPtr.Zero);
+                    if (hThread != IntPtr.Zero)
                     {
-                        IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
-                        if (hThread != IntPtr.Zero)
-                        {
-                            MemoryManager.WaitForSingleObject(hThread, 1000);
-                            MemoryManager.CloseHandle(hThread);
-                        }
+                        MemoryManager.WaitForSingleObject(hThread, 100);
+                        MemoryManager.CloseHandle(hThread);
                     }
-                    MemoryManager.VirtualFreeEx(HProcess, allocMem, 0, 0x8000);
                 }
             }
         }
 
 
-        public static void teleporte(IntPtr HProcess, byte[] packetStruct, byte[] packetSend, long npcID, long slotItem)
+        public static void teleporte(IntPtr HProcess, IntPtr sharedAllocMem, IntPtr buffer, byte[] packetStruct, byte[] packetSend, long npcID, long slotItem)
         {
 
             {
@@ -301,12 +273,12 @@ namespace NovoProjetoAvalonia.Services
                     return;
                 }
 
-                byte[] teleportbuffer = new byte[] { 0x6d, 0x00, 0x00, itemslot[0], 0x00, 0x01, 0x00, 0x00, 0x00, 0x12, 0xE8, 0x00,0x00, npcbyt[0], npcbyt[1] };
+                byte[] teleportbuffer = new byte[] { 0x6d, 0x00, 0x00, itemslot[0], 0x00, 0x01, 0x00, 0x00, 0x00, 0x12, 0xE8, 0x00,0x00, npcbyt[0], npcbyt[1],0x00,0x00 };
 
-                IntPtr memBuffer = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (UIntPtr)0x11, 0x1000 | 0x2000, 0x40);
-                MemoryManager.WriteProcessMemory(HProcess, memBuffer, teleportbuffer, 0x11, out _);
+               
+                MemoryManager.WriteProcessMemory(HProcess, buffer, teleportbuffer, 0x11, out _);
 
-                byte[] memBufferAddress = BitConverter.GetBytes(memBuffer);
+                byte[] memBufferAddress = BitConverter.GetBytes(buffer);
 
                 byte[] shellcode = new byte[]
                 {
@@ -325,29 +297,24 @@ namespace NovoProjetoAvalonia.Services
                 Buffer.BlockCopy(memBufferAddress, 0, shellcode, 16, 8);
                 Buffer.BlockCopy(packetSend, 0, shellcode, 36, 8);
 
-                IntPtr allocMem = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-                if (allocMem != IntPtr.Zero)
+                if (MemoryManager.WriteProcessMemory(HProcess, (sharedAllocMem + 700), shellcode, (uint)shellcode.Length, out _))
                 {
-                    if (MemoryManager.WriteProcessMemory(HProcess, allocMem, shellcode, (uint)shellcode.Length, out _))
+                    // Cria a thread apontando para o bloco fixo
+                    IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, (sharedAllocMem + 700), IntPtr.Zero, 0, IntPtr.Zero);
+                    if (hThread != IntPtr.Zero)
                     {
-                        IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
-                        if (hThread != IntPtr.Zero)
-                        {
-                            MemoryManager.WaitForSingleObject(hThread, 1000);
-                            MemoryManager.CloseHandle(hThread);
-                        }
+                        MemoryManager.WaitForSingleObject(hThread, 100);
+                        MemoryManager.CloseHandle(hThread);
                     }
-                    MemoryManager.VirtualFreeEx(HProcess, allocMem, 0, 0x8000);
-                    MemoryManager.VirtualFreeEx(HProcess, memBuffer, 0, 0x8000);
                 }
             }
         }
 
 
-        public static void skillSender(IntPtr hProcess, IntPtr hostPlayer, byte[] packetStruct, byte[] packetSender, long idSkill)
+        public static void skillSender(IntPtr HProcess, IntPtr sharedAllocMem, IntPtr buffer, IntPtr hostPlayer, byte[] packetStruct, byte[] packetSender, long idSkill)
         {
 
-            long ptralvo = MemoryManager.ReadInt64(hProcess, new IntPtr(hostPlayer + 0xa4c));
+            long ptralvo = MemoryManager.ReadInt64(HProcess, new IntPtr(hostPlayer + 0xB14));
 
             byte[] alvo = BitConverter.GetBytes(ptralvo);
 
@@ -355,10 +322,10 @@ namespace NovoProjetoAvalonia.Services
 
             byte[] pacoteSkill = new byte[] { 0x29, 0x00, skillid[0], skillid[1], 0x00, 0x00, 0x0b, 0x01, alvo[0], alvo[1], alvo[2], alvo[3] };
 
-            IntPtr memBuffer = MemoryManager.VirtualAllocEx(hProcess, IntPtr.Zero, (UIntPtr)0x12, 0x1000 | 0x2000, 0x40);
-            MemoryManager.WriteProcessMemory(hProcess, memBuffer, pacoteSkill, 0x12, out _);
+            
+            MemoryManager.WriteProcessMemory(HProcess, buffer, pacoteSkill, 0xC, out _);
 
-            byte[] memb = BitConverter.GetBytes(memBuffer);
+            byte[] memb = BitConverter.GetBytes(buffer);
 
             
             byte[] shellcode = new byte[]
@@ -378,50 +345,138 @@ namespace NovoProjetoAvalonia.Services
             Buffer.BlockCopy(memb, 0, shellcode, 16, 8);
             Buffer.BlockCopy(packetSender, 0, shellcode, 36, 8);
 
-           
-            IntPtr memShellcode = MemoryManager.VirtualAllocEx(hProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-            if (memShellcode != IntPtr.Zero)
+
+            if (MemoryManager.WriteProcessMemory(HProcess, (sharedAllocMem+800), shellcode, (uint)shellcode.Length, out _))
             {
-                MemoryManager.WriteProcessMemory(hProcess, memShellcode, shellcode, (uint)shellcode.Length, out _);
-                IntPtr hThread = MemoryManager.CreateRemoteThread(hProcess, IntPtr.Zero, 0, memShellcode, IntPtr.Zero, 0, IntPtr.Zero);
+                // Cria a thread apontando para o bloco fixo
+                IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, (sharedAllocMem + 800), IntPtr.Zero, 0, IntPtr.Zero);
                 if (hThread != IntPtr.Zero)
                 {
-                    MemoryManager.WaitForSingleObject(hThread, 1000);
+                    MemoryManager.WaitForSingleObject(hThread, 100);
                     MemoryManager.CloseHandle(hThread);
                 }
-                MemoryManager.VirtualFreeEx(hProcess, memShellcode, 0, 0x8000);
             }
+        }
 
-            MemoryManager.VirtualFreeEx(hProcess, memBuffer, 0, 0x8000);
+        public static void skillSenderFox(IntPtr HProcess, IntPtr sharedAllocMem, IntPtr buffer, IntPtr hostPlayer, byte[] packetStruct, byte[] packetSender, long idSkill)
+        {
+
+            long ptralvo = MemoryManager.ReadInt64(HProcess, new IntPtr(hostPlayer + 0xB14));
+
+            byte[] alvo = BitConverter.GetBytes(ptralvo);
+
+            byte[] skillid = BitConverter.GetBytes(idSkill);
+
+            byte[] pacoteSkill = new byte[] { 0x29, 0x00, skillid[0], skillid[1], 0x00, 0x00, 0x01, 0x01, alvo[0], alvo[1], alvo[2], alvo[3] };
+
+
+            MemoryManager.WriteProcessMemory(HProcess, buffer, pacoteSkill, 0xC, out _);
+
+            byte[] memb = BitConverter.GetBytes(buffer);
+
+
+            byte[] shellcode = new byte[]
+            {
+                0x48, 0x83, 0xEC, 0x28,
+                0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x48, 0xBA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x49, 0xB8, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0xFF, 0xD0,
+                0x48, 0x83, 0xC4, 0x28,
+                0xC3
+            };
+
+
+            Buffer.BlockCopy(packetStruct, 0, shellcode, 6, 8);
+            Buffer.BlockCopy(memb, 0, shellcode, 16, 8);
+            Buffer.BlockCopy(packetSender, 0, shellcode, 36, 8);
+
+
+            if (MemoryManager.WriteProcessMemory(HProcess, (sharedAllocMem + 800), shellcode, (uint)shellcode.Length, out _))
+            {
+                // Cria a thread apontando para o bloco fixo
+                IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, (sharedAllocMem + 800), IntPtr.Zero, 0, IntPtr.Zero);
+                if (hThread != IntPtr.Zero)
+                {
+                    MemoryManager.WaitForSingleObject(hThread, 100);
+                    MemoryManager.CloseHandle(hThread);
+                }
+            }
+        }
+
+        public static void daimonSender(IntPtr HProcess, IntPtr sharedAllocMem, IntPtr buffer, IntPtr hostPlayer, byte[] packetStruct, byte[] packetSender)
+        {
+
+            long ptralvo = MemoryManager.ReadInt64(HProcess, new IntPtr(hostPlayer + 0xB14));
+
+            byte[] alvo = BitConverter.GetBytes(ptralvo);
+
+            byte[] pacoteSkill = new byte[] { 0x74, 0x00, 0xEA, 0X03, 0x01, 0x01, alvo[0], alvo[1], alvo[2], alvo[3]};
+
+
+            MemoryManager.WriteProcessMemory(HProcess, buffer+20, pacoteSkill, 0xA, out _);
+
+            byte[] memb = BitConverter.GetBytes(buffer+20);
+
+
+            byte[] shellcode = new byte[]
+            {
+                0x48, 0x83, 0xEC, 0x28,
+                0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x48, 0xBA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x49, 0xB8, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0xFF, 0xD0,
+                0x48, 0x83, 0xC4, 0x28,
+                0xC3
+            };
+
+
+            Buffer.BlockCopy(packetStruct, 0, shellcode, 6, 8);
+            Buffer.BlockCopy(memb, 0, shellcode, 16, 8);
+            Buffer.BlockCopy(packetSender, 0, shellcode, 36, 8);
+
+
+            if (MemoryManager.WriteProcessMemory(HProcess, (sharedAllocMem + 1100), shellcode, (uint)shellcode.Length, out _))
+            {
+                // Cria a thread apontando para o bloco fixo
+                IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, (sharedAllocMem + 1100), IntPtr.Zero, 0, IntPtr.Zero);
+                if (hThread != IntPtr.Zero)
+                {
+                    MemoryManager.WaitForSingleObject(hThread, 100);
+                    MemoryManager.CloseHandle(hThread);
+                }
+            }
         }
 
 
-        public static void moveTo(IntPtr HProcess, byte[] funcao, byte[] hostPlayer, float[] destino)
+        public static void moveTo(IntPtr HProcess, IntPtr sharedAllocMem, IntPtr buffer, byte[] funcao, byte[] hostPlayer, float[] destino)
         {
 
-            byte[] buffer = new byte[0x40];
+            byte[] moveTo = new byte[0x40];
 
 
             byte[] coordx = BitConverter.GetBytes(destino[0]);
-            coordx.CopyTo(buffer, 24);
+            coordx.CopyTo(moveTo, 24);
             byte[] coordy = BitConverter.GetBytes(destino[1]);
-            coordy.CopyTo(buffer, 28);
-            coordy.CopyTo(buffer, 32);
+            coordy.CopyTo(moveTo, 28);
+            coordy.CopyTo(moveTo, 32);
 
             byte[] coordz = BitConverter.GetBytes(destino[2]);
-            coordz.CopyTo(buffer, 36);
-            coordz.CopyTo(buffer, 40);
+            coordz.CopyTo(moveTo, 36);
+            coordz.CopyTo(moveTo, 40);
 
-            buffer[4] = 1;
-            buffer[16] = 3;
+            moveTo[4] = 1;
+            moveTo[16] = 3;
             byte[] triger = BitConverter.GetBytes(330);
-            triger.CopyTo(buffer);
+            triger.CopyTo(moveTo);
 
 
-            IntPtr memBuffer = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (UIntPtr)0x40, 0x1000 | 0x2000, 0x40);
-            MemoryManager.WriteProcessMemory(HProcess, memBuffer, buffer, 0x40, out _);
+            
+            MemoryManager.WriteProcessMemory(HProcess, buffer, moveTo, 0x40, out _);
 
-            byte[] memBufferBytes = BitConverter.GetBytes(memBuffer.ToInt64());
+            byte[] memBufferBytes = BitConverter.GetBytes(buffer.ToInt64());
 
 
             byte[] shellcode = new byte[]
@@ -436,50 +491,44 @@ namespace NovoProjetoAvalonia.Services
             };
             Buffer.BlockCopy(hostPlayer, 0, shellcode, 6, 8);
             Buffer.BlockCopy(memBufferBytes, 0, shellcode, 16, 8);
-            Buffer.BlockCopy(funcao, 0, shellcode, 26, 8); 
+            Buffer.BlockCopy(funcao, 0, shellcode, 26, 8);
 
 
-            IntPtr allocMem = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-            if (allocMem != IntPtr.Zero)
+            if (MemoryManager.WriteProcessMemory(HProcess, (sharedAllocMem + 900), shellcode, (uint)shellcode.Length, out _))
             {
-                if (MemoryManager.WriteProcessMemory(HProcess, allocMem, shellcode, (uint)shellcode.Length, out _))
+                // Cria a thread apontando para o bloco fixo
+                IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, (sharedAllocMem + 900), IntPtr.Zero, 0, IntPtr.Zero);
+                if (hThread != IntPtr.Zero)
                 {
-                    IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
-                    if (hThread != IntPtr.Zero)
-                    {
-                        MemoryManager.WaitForSingleObject(hThread, 1000);
-                        MemoryManager.CloseHandle(hThread);
-                    }
+                    MemoryManager.WaitForSingleObject(hThread, 100);
+                    MemoryManager.CloseHandle(hThread);
                 }
             }
-            MemoryManager.VirtualFreeEx(HProcess, memBuffer, 0, 0x8000);
-            MemoryManager.VirtualFreeEx(HProcess, allocMem, 0, 0x8000);
         }
 
 
-        public static void pegarMissao(IntPtr HProcess,IntPtr baseAddress, byte[] packetStruct, byte[] packetSend, long npcID)
+        public static void pegarMissao(IntPtr HProcess, IntPtr sharedAllocMem, IntPtr buffer, IntPtr baseAddress, byte[] packetStruct, byte[] packetSend, long npcID)
         {
 
             {
 
-                byte[] buffer = new byte[0x1a];
+                byte[] missao = new byte[0x1a];
 
                 byte[] npc = BitConverter.GetBytes((short)npcID);
-                npc.CopyTo(buffer, 0xa);
+                npc.CopyTo(missao, 0xa);
 
                 byte[] prim = BitConverter.GetBytes((short)37);
-                prim.CopyTo(buffer, 0);
+                prim.CopyTo(missao, 0);
 
-                buffer[2] = 7;
+                missao[2] = 7;
 
                 byte[] prim2 = BitConverter.GetBytes((short)16);
-                prim2.CopyTo(buffer, 6);
+                prim2.CopyTo(missao, 6);
 
 
-                IntPtr memBuffer = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (UIntPtr)0x1a, 0x1000 | 0x2000, 0x40);
-                MemoryManager.WriteProcessMemory(HProcess, memBuffer, buffer, 0x1a, out _);
+                MemoryManager.WriteProcessMemory(HProcess, buffer, missao, 0x1a, out _);
 
-                byte[] memBufferAddress = BitConverter.GetBytes(memBuffer);
+                byte[] memBufferAddress = BitConverter.GetBytes(buffer);
 
                 byte[] shellcode = new byte[]
                 {
@@ -499,27 +548,22 @@ namespace NovoProjetoAvalonia.Services
                 Buffer.BlockCopy(memBufferAddress, 0, shellcode, 16, 8);
                 Buffer.BlockCopy(packetSend, 0, shellcode, 46, 8);
 
-                
-                IntPtr allocMem = MemoryManager.VirtualAllocEx(HProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-                if (allocMem != IntPtr.Zero)
+
+                if (MemoryManager.WriteProcessMemory(HProcess, (sharedAllocMem + 1000), shellcode, (uint)shellcode.Length, out _))
                 {
-                    if (MemoryManager.WriteProcessMemory(HProcess, allocMem, shellcode, (uint)shellcode.Length, out _))
+                    // Cria a thread apontando para o bloco fixo
+                    IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, (sharedAllocMem + 1000), IntPtr.Zero, 0, IntPtr.Zero);
+                    if (hThread != IntPtr.Zero)
                     {
-                        IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
-                        if (hThread != IntPtr.Zero)
-                        {
-                            MemoryManager.WaitForSingleObject(hThread, 1000);
-                            MemoryManager.CloseHandle(hThread);
-                        }
+                        MemoryManager.WaitForSingleObject(hThread, 100);
+                        MemoryManager.CloseHandle(hThread);
                     }
-                    MemoryManager.VirtualFreeEx(HProcess, allocMem, 0, 0x8000);
-                    MemoryManager.VirtualFreeEx(HProcess, memBuffer, 0, 0x8000);
                 }
             }
         }
 
 
-        public static void Castar(IntPtr HProcess, byte[] funcao, byte[] hostPlayer, long skillID)
+        public static void Castar(IntPtr HProcess, IntPtr sharedAllocMem, byte[] funcao, byte[] hostPlayer, long skillID)
         {
 
             {
@@ -554,7 +598,7 @@ namespace NovoProjetoAvalonia.Services
                         IntPtr hThread = MemoryManager.CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
                         if (hThread != IntPtr.Zero)
                         {
-                            MemoryManager.WaitForSingleObject(hThread, 1000);
+                            MemoryManager.WaitForSingleObject(hThread, 100);
                             MemoryManager.CloseHandle(hThread);
                         }
                     }

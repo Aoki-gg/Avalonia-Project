@@ -1,11 +1,14 @@
 using Avalonia.Controls;
-using Avalonia.Win32.Input;
-using NovoProjetoAvalonia.ViewModels;
-using System;
-using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.Win32.Input;
+using NovoProjetoAvalonia.Services;
+using NovoProjetoAvalonia.ViewModels;
+using System;
+using System.Runtime.InteropServices;
+using System.Windows.Input;
+
 
 namespace NovoProjetoAvalonia.Views;
 
@@ -34,6 +37,30 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        this.Closing += MainWindow_Closing;
+        GlobalKeyboardHook.Initialize();
+    }
+
+
+
+    private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        // Se o seu DataContext for o ViewModel principal que gerencia a conexão com o jogo:
+        if (DataContext is ContasSalvasViewModel vm)
+        {
+            // Chama o método que desanexa, libera a memória remota e fecha os handles
+            vm.DesanexarDoJogo();
+        }
+
+        // Se você gerencia essas variáveis diretamente na MainWindow, faça a limpeza aqui:
+        /*
+        if (_hProcess != IntPtr.Zero && _sharedAllocMem != IntPtr.Zero)
+        {
+            // Libera a página de memória alocada dentro do elementclient_64.exe
+            MemoryManager.VirtualFreeEx(_hProcess, _sharedAllocMem, 0, 0x8000); // MEM_RELEASE = 0x8000
+            MemoryManager.CloseHandle(_hProcess);
+        }
+        */
     }
 
     private void OnWindowOpened(object? sender, EventArgs e)
